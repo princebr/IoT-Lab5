@@ -1,0 +1,208 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>UW IoT Lab5</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/lab5.css') }}">
+  <script src="{{ url_for('static',filename='js/jquery-3.1.1.min.js') }}"></script>
+  <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static',filename='js/lab5.js') }}"></script>
+</head>
+
+<body>
+<!--
+  <h2>UW IoT | Lab 2: GPio API and Webapp</h2>
+  <h3>Switch: <span id="switch"</span></h3>
+  <h4>RED LED (on GPIO18): <span id="red_led_label"</span></h4>
+  <h4>GREEN LED (on GPIO13): <span id="grn_led_label"</span></h4>
+  <h4>BLUE LED (on GPIO23): <span id="blu_led_label"</span></h4>
+
+  <p>
+    <button style="width:100px; height:50px; color:white; background:red" type='button' id='red_led_btn'>OSU<br>(1)</button><br><br>
+    <button style="width:100px; height:50px; color:white; background:black" type='button' id='grn_led_btn'>GO<br>(2)</button><br><br>
+    <button style="width:100px; height:50px; color:white; background:orange" type='button' id='blu_led_btn'>BEAVS!<br>(3)</button><br><br>
+  </p>-->
+  
+  <script type="text/javascript">
+    var iotSource = new EventSource("{{ url_for('myData') }}");
+    // intercept the incoming states from SSE
+  </script>
+  
+  <div class="container panel">
+    <div class="container well well-sm">
+      <h3 id='title'>Lab 3 GPIO Server Sent Events</h3>
+    </div>
+
+    <div class="container well">
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3">
+          <h4 class="gpio">Switch</h4>
+        </div>
+        <div class="col-sm-3 switch">
+          <h4><span id="switch" class="label label-default">&#9759</span></h4>
+        </div>
+        <div class="col-sm-2">
+          <h4 class="gpio">[GPIO27]</h4></div>
+        <div class="col-sm-2"></div>
+      </div>
+
+      <!-- LED: RED -->
+      <div class="row">
+        <div class="col-sm-2"></div>
+
+        <div class="col-sm-3 led_button">
+          <button type='button' id="red_led_btn" class="btn btn-md btn-danger">Toggle LED</button>
+        </div>
+        <div class="col-sm-3 led_label">
+          <h4><span id="red_led_label" class="label label-default">&#9728</span></span></h4>
+        </div>
+        <div class="col-sm-2">
+          <h4 class="gpio">[GPIO18]</h4></div>
+        <div class="col-sm-2"></div>
+      </div>
+      <!-- LED: GREEN -->
+      <div class="row">
+        <div class="col-sm-2"></div>
+
+        <div class="col-sm-3 led_button">
+          <button type='button' id="grn_led_btn" class="btn btn-md btn-success">Toggle LED</button>
+        </div>
+        <div class="col-sm-3 led_label">
+          <h4><span id="grn_led_label" class="label label-default">&#9728</span></h4>
+        </div>
+        <div class="col-sm-2">
+          <h4 class="gpio">[GPIO13]</h4></div>
+        <div class="col-sm-2"></div>
+      </div>
+      <!-- LED: BLUE -->
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3 led_button">
+          <button type='button' id="blu_led_btn" class="btn btn-md btn-primary">Toggle LED</button>
+        </div>
+        <div class="col-sm-3 led_label">
+          <h4><span id="blu_led_label" class="label label-default">&#9728</span></h4>
+        </div>
+        <div class="col-sm-2">
+          <h4 class="gpio">[GPIO23]</h4></div>
+        <div class="col-sm-2"></div>
+      </div>
+    </div>
+  </div>
+<!--
+  <script type="text/javascript">
+    var iotSource = new EventSource("{{ url_for('myData') }}");
+    // intercept the incoming states from SSE
+  </script>-->
+
+  <!--</body>-->
+
+  <script>
+    // start executing only after document has loaded
+    $(document).ready(function() {
+      // establish global variables for LED status
+      var led1;
+      var led2;
+      var led3;
+   
+      // -----------------------------------------------------
+      // ---------------------- START HERE -------------------
+      
+    
+     		//var iotSource = new EventSource("{{ url_for('myData') }}"); 
+        /* intercept the incoming states from SSE */
+        iotSource.onmessage = function(e) {
+          var params = e.data.split(' ');
+          updateSwitch(params[0]);
+          updateLeds(1,params[1]);
+          updateLeds(2,params[2]);
+          updateLeds(3,params[3]);
+        }
+
+        /* update the Switch based on its SSE state monitor */
+        function updateSwitch(switchValue) {
+          if (switchValue === '1') {
+            $('#switch').text('ON');
+          } else if (switchValue === '0') {
+            $('#switch').text('OFF');
+          }
+        }
+
+        /* update the LEDs based on their SSE state monitor */
+        function updateLeds(ledNum,ledValue) {
+          if (ledNum === 1) {
+            if (ledValue === '1') {
+              $('#red_led_label').text('ON');
+              led1 = "ON"
+            } else if (ledValue === '0') {
+              $('#red_led_label').text('OFF');
+              led1 = "OFF"
+            }
+          }
+          else if (ledNum === 2) {
+            if (ledValue === '1') {
+              $('#grn_led_label').text('ON');
+              led2 = "ON"
+            } else if (ledValue === '0') {
+              $('#grn_led_label').text('OFF');
+              led2 = "OFF"
+            }
+          }
+          else if (ledNum === 3) {
+            if (ledValue === '1') {
+              $('#blu_led_label').text('ON');
+              led3 = "ON"
+            } else if (ledValue === '0') {
+              $('#blu_led_label').text('OFF');
+              led3 = "OFF"
+            }
+          }
+        }
+   
+    // Click Functions ...
+        $('#red_led_btn').click(function() {
+        if (led1 === "OFF") {
+          led1 = "ON";
+        } else {
+          led1 = "OFF";
+        }
+        var params = 'led=1&state=' + led1;
+        console.log('LED Command with params:' + params);
+        $.post('/ledcmd', params, function(data, status) {
+          console.log("Data: " + data + "\nStatus: " + status);
+        })
+      })
+
+      $('#grn_led_btn').click(function() {
+        if (led2 === "OFF") {
+          led2 = "ON";
+        } else {
+          led2 = "OFF";
+        }
+        var params = 'led=2&state=' + led2;
+        console.log('LED Command with params:' + params);
+        $.post('/ledcmd', params, function(data, status) {
+          console.log("Data: " + data + "\nStatus: " + status);
+        })
+      })
+
+      $('#blu_led_btn').click(function() {
+        if (led3 === "OFF") {
+          led3 = "ON";
+        } else {
+          led3 = "OFF";
+        }
+        var params = 'led=3&state=' + led3;
+        console.log('LED Command with params:' + params);
+        $.post('/ledcmd', params, function(data, status) {
+          console.log("Data: " + data + "\nStatus: " + status);
+        })
+      })
+    })
+  </script>
+
+</body>
+
+</html>
