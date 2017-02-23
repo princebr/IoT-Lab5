@@ -9,19 +9,29 @@
       // -----------------------------------------------------
       // ---------------------- START HERE -------------------
       
-    
-     	//var iotSource = new EventSource("{{ url_for('myData') }}"); 
-        
+       
 	    /* intercept the incoming states from SSE */
         iotSource.onmessage = function(e) {
-	
+          var dqf = e.data.replace(/'/g, '"');
+          d = JSON.parse(dqf);
+          
+          updateSwitch(d["switch"]);
+          updateLeds(d["led_red"]);
+          updateLeds(d["led_grn"]);
+          updateLeds(d["led_blu"]);
+          updateSensors(d);
+          
+          console.log(d);
+        }
+	      /*
+        iotSource.onmessage = function(e) {
           var params = e.data.split(' ');
           console.log(e.data);
           updateSwitch(params[0]);
           updateLeds(1,params[1]);
           updateLeds(2,params[2]);
           updateLeds(3,params[3]);
-        }
+        }*/
 
         /* update the Switch based on its SSE state monitor */
         function updateSwitch(switchValue) {

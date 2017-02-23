@@ -18,7 +18,7 @@ def get_sensor_values():
     sensor["data"]["pressure"] = { "reading": pressure, "units" : "hPa" }
     return sensor["data"]
 
-# ============================== API Routes ===================================# API ROUTES
+# ============================== API Routes ===================================# 
 
 app = Flask(__name__)
 
@@ -77,12 +77,13 @@ def myData():
             # return the yield results on each loop, but never exits while loop
             raw_switch = pi_gpio.read_switch()
             debounced_switch = str(db.debounce(raw_switch))
-            switch = str(pi_gpio.read_switch())
-            led_red = str(pi_gpio.get_led(1))
-            led_grn = str(pi_gpio.get_led(2))
-            led_blu = str(pi_gpio.get_led(3))
-            yield('data: {0} {1} {2} {3}\n\n'.format(debounced_switch, led_red, led_grn, led_blu))
-            time.sleep(0.1)
+            data_obj = get_sensor_values()
+            data_obj["led_red"] = str(pi_gpio.get_led(1))
+            data_obj["led_grn"] = str(pi_gpio.get_led(2))
+            data_obj["led_blu"] = str(pi_gpio.get_led(3))
+            data_obj["switch"] = debounced_switch
+            yield('data: {0}\n\n'.format(data_obj))
+            time.sleep(1.0)
     return Response(get_state_values(), mimetype='text/event-stream')
 
 
