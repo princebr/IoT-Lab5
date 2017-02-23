@@ -23,15 +23,15 @@
     <button style="width:100px; height:50px; color:white; background:black" type='button' id='grn_led_btn'>GO<br>(2)</button><br><br>
     <button style="width:100px; height:50px; color:white; background:orange" type='button' id='blu_led_btn'>BEAVS!<br>(3)</button><br><br>
   </p>-->
-  
+  <!-- 2/20
   <script type="text/javascript">
     var iotSource = new EventSource("{{ url_for('myData') }}");
     // intercept the incoming states from SSE
-  </script>
+  </script>-->
   
   <div class="container panel">
     <div class="container well well-sm">
-      <h3 id='title'>Lab 3 GPIO Server Sent Events</h3>
+      <h3 id='title'>Lab 5 GPIO Server Sent Events</h3>
     </div>
 
     <div class="container well">
@@ -91,14 +91,15 @@
       </div>
     </div>
   </div>
-<!--
+
+  <!-- Move JS components over to Lab5.js 2/20 -->
   <script type="text/javascript">
     var iotSource = new EventSource("{{ url_for('myData') }}");
     // intercept the incoming states from SSE
-  </script>-->
+  </script>
 
   <!--</body>-->
-
+<!-- 2/20
   <script>
     // start executing only after document has loaded
     $(document).ready(function() {
@@ -202,7 +203,7 @@
       })
     })
   </script>
-
+-->
 </body>
 
 </html>
